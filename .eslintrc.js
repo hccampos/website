@@ -20,9 +20,10 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-unused-vars': 'off',
-    'sort-imports': 'off',
+    '@typescript-eslint/no-use-before-define': 'off',
     'react-hooks/exhaustive-deps': 'warn',
     'react-hooks/rules-of-hooks': 'error',
+    'sort-imports': 'off',
   },
   settings: {
     react: {

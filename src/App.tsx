@@ -1,51 +1,45 @@
-import React, { Suspense, useCallback } from 'react';
-import { Text } from './Text';
-import { useSpring, SpringValue } from '@react-spring/three';
-import { Canvas } from 'react-three-fiber';
+import React, { Suspense, useMemo } from 'react';
+import { useSpring } from '@react-spring/three';
+import { Canvas, useFrame } from 'react-three-fiber';
+import { Vector2 } from 'three';
+import { Ground } from './Ground';
 import { useTimeout } from './hooks/use-timeout';
+import { Title } from './Title';
 
-const MAX_ROTATION = Math.PI / 4;
-const RESET_DELAY = 2000;
+const IDLE_DELAY = 3000;
 
-function Title({ mouse }: { mouse: SpringValue<[number, number]> }) {
-  const rotation = mouse.interpolate((x: number, y: number) => {
-    return [y * MAX_ROTATION, x * MAX_ROTATION, 0];
+function Scene() {
+  const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] as [number, number] }));
+  const delayTimeout = useTimeout(() => set({ mouse: [0, 0] }), IDLE_DELAY, [set]);
+  const lastMouse = useMemo<Vector2>(() => new Vector2(), []);
+
+  useFrame(ctx => {
+    if (!ctx.mouse || ctx.mouse.equals(lastMouse)) {
+      return;
+    }
+
+    lastMouse.copy(ctx.mouse);
+
+    set({ mouse: [ctx.mouse.x, ctx.mouse.y] });
+    delayTimeout();
   });
 
   return (
     <>
-      <Text rotation={rotation as any} text="Hugo Campos"></Text>
-      <Text
-        position-z={2}
-        position-y={-2}
-        rotation={rotation as any}
-        size={0.2}
-        text="Software/Web Developer"
-      ></Text>
+      <Title mouse={mouse} />
+      <Ground />
     </>
   );
 }
 
 export function App() {
-  const [{ mouse }, set] = useSpring(() => ({ mouse: [0, 0] as [number, number] }));
-  const delayTimeout = useTimeout(() => set({ mouse: [0, 0] }), RESET_DELAY, [set]);
-
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      set({ mouse: [e.clientX / window.innerWidth - 0.5, e.clientY / window.innerHeight - 0.5] });
-      delayTimeout();
-    },
-    [set, delayTimeout],
-  );
-
   return (
     <>
-      <Canvas camera={{ position: [0, 0, 10] }}>
+      <Canvas camera={{ position: [0, 2, 1], rotation: [-Math.PI / 3, 0, 0], far: 1000 }}>
         <Suspense fallback={null}>
-          <Title mouse={mouse} />
+          <Scene />
         </Suspense>
       </Canvas>
-      <div className="pointer-container" onMouseMove={onMouseMove}></div>
     </>
   );
 }

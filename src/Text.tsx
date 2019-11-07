@@ -27,8 +27,8 @@ export function Text({
   const config = useMemo<TextGeometryParameters>(
     () => ({
       font,
-      size: 20,
-      height: 0.1,
+      size: 1,
+      height: 0.001,
       curveSegments: 32,
       bevelEnabled: false,
     }),
@@ -51,7 +51,7 @@ export function Text({
   );
 
   return (
-    <a.group {...props} scale={[0.1 * size, 0.1 * size, 0.1]}>
+    <a.group {...props} scale={[size, size, 1]}>
       <a.mesh ref={mesh}>
         <a.textGeometry attach="geometry" args={[text, config]} />
         <a.meshBasicMaterial attach="material" color={color} />
