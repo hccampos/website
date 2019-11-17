@@ -5,6 +5,7 @@ import { Vector2 } from 'three';
 import { useTimeout } from './hooks/use-timeout';
 import { Room } from './Room';
 import { Camera } from './Camera';
+import { Terrain } from './Terrain';
 
 const IDLE_DELAY = 3000;
 const MAX_ROTATION = Math.PI / 6;
@@ -12,7 +13,7 @@ const MAX_ROTATION = Math.PI / 6;
 function Scene() {
   const [{ mouse, cameraPosition, cameraRotation }, set] = useSpring(() => ({
     mouse: [0, 0],
-    cameraPosition: [0, 1.5, 0.5],
+    cameraPosition: [0, 1.5, 0.6],
     cameraRotation: [0, -Math.PI, 0],
   }));
   const delayTimeout = useTimeout(() => set({ mouse: [0, 0] }), IDLE_DELAY, [set]);
@@ -38,6 +39,7 @@ function Scene() {
       <Camera position={cameraPosition} rotation={combinedRotation}></Camera>
       <ambientLight intensity={0.8} />
       <directionalLight intensity={0.5} position={[5, 5, 5]}></directionalLight>
+      <Terrain></Terrain>
       <Room></Room>
     </>
   );
@@ -46,7 +48,7 @@ function Scene() {
 export function App() {
   return (
     <>
-      <Canvas>
+      <Canvas shadowMap>
         <Suspense fallback={null}>
           <Scene />
         </Suspense>
