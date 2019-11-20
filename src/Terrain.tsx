@@ -5,8 +5,8 @@ import { Mesh, MeshStandardMaterial } from 'three';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MODEL_URL = require('../assets/terrain.glb');
-const SCALE = [1, 0.6, 1];
-const POSITION = [0, -3, 0];
+const SCALE = [1.2, 0.6, 1];
+const POSITION = [-8, -2, 0];
 
 export function Terrain(_: {}) {
   const gltf = useLoader<GLTF>(GLTFLoader as any, MODEL_URL);
